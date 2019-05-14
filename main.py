@@ -225,12 +225,15 @@ def run(market):
         largeSMA = market.getAllIndicators()["largeSMA"].getAverages()[0]
         if smallSMA > largeSMA:
             if market.holdings["EUR/USD"] <= 0:
-                
+                print(market.holdings["EUR/USD"])
+                #market.buy("EUR/USD", math.floor(10))
                 market.buy("EUR/USD", math.floor(market.balance * .5))
                
                 
         if largeSMA > smallSMA:
             if market.holdings["EUR/USD"] >= 0:
+                
+                #market.sell("EUR/USD", math.floor(10))
                 market.sell("EUR/USD", math.floor(market.balance * .5))
                
     #gonna test sma crossing each other 
@@ -288,10 +291,10 @@ def end(market):
         print("final balance: " + str(market.balance))
         print("\n \n \n")
         print("buys and sell times: " + str(len(market.timeBuys)) + " " + str(len(market.timeSells)))
-        print(market.timeBuys)
-        print(market.priceBuys)
-        print(market.timeSells)
-        print(market.priceSells)
+        #print(market.timeBuys)
+        #print(market.priceBuys)
+        #print(market.timeSells)
+        #print(market.priceSells)
     return market
 #x = market.listSellPrices["EUR/USD"]
 #y= market.times
@@ -306,7 +309,12 @@ file = "EURUSD2018.csv"
 
 #this allows a brute force of the best variables by using multi-threading
 #listToAdd is gonna be a list of market objects
+indicators = {"smallSMA": [SMA,"EUR/USD", 100], "largeSMA": [SMA, "EUR/USD", 200]}
+start(100000, 15, file, True, True, indicators)
 
+
+'''
+SHOULD BE ABLE TO DELETE, IN WRONG BRANCH
 def myThreads(listToAdd, i):
     #initial value to compaire to
     indicators = {"smallSMA": [SMA,"EUR/USD", 100], "largeSMA": [SMA, "EUR/USD", 200]}
@@ -362,3 +370,4 @@ if __name__ == "__main__":
     print("smallSMA and largeSMA: ")
     print(best.getIndicator("smallSMA").getLength())
     print(best.getIndicator("largeSMA").getLength())
+'''
