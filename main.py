@@ -225,7 +225,7 @@ def run(market):
         largeSMA = market.getAllIndicators()["largeSMA"].getAverages()[0]
         if smallSMA > largeSMA:
             if market.holdings["EUR/USD"] <= 0:
-                print(market.holdings["EUR/USD"])
+                
                 #market.buy("EUR/USD", math.floor(10))
                 market.buy("EUR/USD", math.floor(market.balance * .5))
                
