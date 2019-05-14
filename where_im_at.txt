@@ -16,3 +16,10 @@ modify the other methods so that their funcinallity isn't hard coded
 only start and run should need to be modified
 
 start(balance, timeLength, file, isplot, isprint **all the args)
+
+Change the name of the main.py file in git between branches,
+I might want both of them
+
+make changes based on the weight between the sma
+
+add more indicators
