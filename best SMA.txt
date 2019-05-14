@@ -1,0 +1,5 @@
+best SMA: 356, 390, 100843.79
+
+testing with these values over the month of janurary - making 16 dollars when betting half the value it basically made nothing
+
+SMA appears not to be useful, adding another indicator

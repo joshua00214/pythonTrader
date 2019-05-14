@@ -1,0 +1,18 @@
+1)
+in processes of using all of the cores on the cpu for the brute force algos
+
+finding a way to share the data between processes
+
+	FINISHED
+
+2)
+add more indicators 
+
+make sure that the threading functinality doesn't need changed for each indicator by using market.getallindicators (ish)
+
+modify the other methods so that their funcinallity isn't hard coded 
+	-working on adding a way to send all indicators to start, its messed up.
+
+only start and run should need to be modified
+
+start(balance, timeLength, file, isplot, isprint **all the args)
