@@ -6,4 +6,4 @@ SMA appears not to be useful, adding another indicator
 
 testing at 15 minute increments,
 	bruteforcing with 400 executions through the file
-small change
+apparently the 100 and 200 for small and long sma work the best

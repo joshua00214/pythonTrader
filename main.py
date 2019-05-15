@@ -313,7 +313,7 @@ def myThreads(listToAdd, i):
     #originial value to compare to
     value = start(100000, 15, file,False, False, indicators)
     #run through the market x times, comparing it to value and grabbing the best
-    for x in range(50):
+    for x in range(5):
         a = random.randint(2, 500)
         b = random.randint(2, 500)
     
@@ -328,7 +328,7 @@ def myThreads(listToAdd, i):
             indicators["largeSMA"][2] = b
             
         val = start(100000, 15,file,False, False,indicators)
-        print("a: " + str(a) +  " b: " + str(b) + " val: " + str(val.balance) + " at number: " + str(x) + " thread #: " + str(i))
+        print("a: " + str(a) +  " b: " + str(b) + " val: " + str(val.balance) + " at number: " + str(x) + " thread #: " + str(i) + "small: " + str(val.getAllIndicators()["smallSMA"].getLength()))
         if val.balance > value.balance:
             value = val
     listToAdd[i] = value
