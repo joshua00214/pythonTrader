@@ -40,17 +40,18 @@ class Market:
     def buy(self, currency, amount):
         if self.balance > self.buyPrices[currency] * amount:
             self.balance -= self.buyPrices[currency] * amount
+            print("buying - " + str(amount))
             self.holdings[currency] += amount
             self.updateUnrealizedBalance()
             self.priceBuys.append(self.buyPrices[currency])
             self.timeBuys.append(self.minute + " " + self.date)
-            self.updateUnrealizedBalance()
+            #self.updateUnrealizedBalance()
         else:
             raise Exception("Not enough money to buy " + currency)
         
     #sells that amount
     def sell(self, currency, amount):
-        
+        print("selling - " + str(amount))
         if self.holdings[currency] >= amount:
             self.holdings[currency] -= amount
             self.balance += amount * self.sellPrices[currency]
@@ -94,7 +95,7 @@ class Market:
             if self.holdings[currency] < 0:
                 self.unrealizedBalance = float(self.balance) - float(float(self.holdings[currency]) * float(-1) * float(self.buyPrices[currency]))
             if self.holdings[currency] > 0:
-                self.unrealizedBalance = self.balance - (self.holdings[currency] * self.sellPrices[currency])
+                self.unrealizedBalance = self.balance + (self.holdings[currency] * self.sellPrices[currency])
 
             if self.holdings[currency] == 0:
                 self.unrealizedBalance = self.balance
@@ -291,10 +292,10 @@ def end(market):
         print("final balance: " + str(market.balance))
         print("\n \n \n")
         print("buys and sell times: " + str(len(market.timeBuys)) + " " + str(len(market.timeSells)))
-        #print(market.timeBuys)
-        #print(market.priceBuys)
-        #print(market.timeSells)
-        #print(market.priceSells)
+        print(market.timeBuys)
+        print(market.priceBuys)
+        print(market.timeSells)
+        print(market.priceSells)
     return market
 #x = market.listSellPrices["EUR/USD"]
 #y= market.times

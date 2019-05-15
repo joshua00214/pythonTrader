@@ -6,6 +6,6 @@ import math
 from threading import Thread
 from multiprocessing import Process, Manager
 from main import start
-file = "EURUSD2018.csv"
-indicators = {"smallSMA": [SMA,"EUR/USD", 100], "largeSMA": [SMA, "EUR/USD", 200]}
+file = "EURUSDFEB.csv"
+indicators = {"smallSMA": [SMA,"EUR/USD", 70], "largeSMA": [SMA, "EUR/USD", 399]}
 start(100000, 15, file, True, True, indicators)
