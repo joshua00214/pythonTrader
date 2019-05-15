@@ -94,7 +94,7 @@ class Market:
             if self.holdings[currency] < 0:
                 self.unrealizedBalance = float(self.balance) - float(float(self.holdings[currency]) * float(-1) * float(self.buyPrices[currency]))
             if self.holdings[currency] > 0:
-                self.unrealizedBalance = self.balance - (self.holdings[currency] * self.sellPrices[currency])
+                self.unrealizedBalance = self.balance + (self.holdings[currency] * self.sellPrices[currency])
 
             if self.holdings[currency] == 0:
                 self.unrealizedBalance = self.balance
