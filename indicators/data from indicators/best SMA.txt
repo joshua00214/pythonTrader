@@ -1,0 +1,12 @@
+best SMA: 356, 390, 100843.79
+
+testing with these values over the month of janurary - making 16 dollars when betting half the value it basically made nothing
+
+SMA appears not to be useful, adding another indicator
+
+testing at 15 minute increments,
+	bruteforcing with 400 executions through the file
+apparently the 100 and 200 for small and long sma work the best
+70, 399 - had largest over the entire year.
+
+Apparently, SMA's are useless.
