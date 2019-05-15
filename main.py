@@ -6,6 +6,7 @@ import random
 import math
 from threading import Thread
 from multiprocessing import Process, Manager
+import sys
 #will contain the ability to buy/sell, balance
 class Market:
     #sets balance, and all holdings

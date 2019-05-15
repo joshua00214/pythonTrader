@@ -16,3 +16,7 @@ modify the other methods so that their funcinallity isn't hard coded
 only start and run should need to be modified
 
 start(balance, timeLength, file, isplot, isprint **all the args)
+
+
+
+going to test out a weighted sma

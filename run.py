@@ -6,6 +6,7 @@ import math
 from threading import Thread
 from multiprocessing import Process, Manager
 from main import start
+import sys
 file = "EURUSD2018.csv"
 def myThreads(listToAdd, i):
     #initial value to compaire to
@@ -35,6 +36,10 @@ def myThreads(listToAdd, i):
 
 
 if __name__ == "__main__":
+    if sys.argv[1] == "True":
+        indicators = {"smallSMA": [SMA,"EUR/USD", 70], "largeSMA": [SMA, "EUR/USD", 399]}
+        start(100000, 15, file,True, True, indicators)
+        exit()
     #manager syncs the list between all the processes
     manager = Manager()
     numOfThreads = 9
