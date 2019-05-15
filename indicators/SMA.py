@@ -1,4 +1,5 @@
 from .Indicators import Indicator
+#note- length is proportinal to the time interval being used
 class SMA(Indicator):
     def __init__(self, currency, length):
         self.values = []

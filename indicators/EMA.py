@@ -9,6 +9,7 @@ k = 2/(N+1)
 y = yesterday
 
 '''
+#note- length is proportinal to the time interval being used
 class EMA(Indicator):
     def __init__(self, currency, length):
         self.values = []
