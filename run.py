@@ -9,11 +9,11 @@ from main import start
 file = "EURUSD2018.csv"
 def myThreads(listToAdd, i):
     #initial value to compaire to
-    indicators = {"smallSMA": [SMA,"EUR/USD", 100], "largeSMA": [SMA, "EUR/USD", 200]}
+    indicators = {"smallSMA": [SMA,"EUR/USD", 110], "largeSMA": [SMA, "EUR/USD", 200]}
     #originial value to compare to
     value = start(100000, 15, file,False, False, indicators)
     #run through the market x times, comparing it to value and grabbing the best
-    for x in range(5):
+    for x in range(50):
         a = random.randint(2, 500)
         b = random.randint(2, 500)
     
