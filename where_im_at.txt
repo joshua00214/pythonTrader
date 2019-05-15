@@ -20,3 +20,6 @@ start(balance, timeLength, file, isplot, isprint **all the args)
 
 
 going to test out a weighted sma
+
+
+3) add a way to pass a list of data to the run method from the threading method

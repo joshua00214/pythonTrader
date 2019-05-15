@@ -1,4 +1,5 @@
 from indicators.SMA import SMA
+from indicators.EMA import EMA
 import plotly
 import plotly.graph_objs as go
 import random
@@ -7,7 +8,7 @@ from threading import Thread
 from multiprocessing import Process, Manager
 from main import start
 import sys
-file = "EURUSD2018.csv"
+file = "EURUSDFEB.csv"
 def myThreads(listToAdd, i):
     #initial value to compaire to
     indicators = {"smallSMA": [SMA,"EUR/USD", 110], "largeSMA": [SMA, "EUR/USD", 200]}
@@ -37,7 +38,7 @@ def myThreads(listToAdd, i):
 
 if __name__ == "__main__":
     if sys.argv[1] == "True":
-        indicators = {"smallSMA": [SMA,"EUR/USD", 70], "largeSMA": [SMA, "EUR/USD", 399]}
+        indicators = {"EMA": [EMA,"EUR/USD", 60]}
         start(100000, 15, file,True, True, indicators)
         exit()
     #manager syncs the list between all the processes

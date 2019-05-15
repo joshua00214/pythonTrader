@@ -1,5 +1,6 @@
 #used for backtesting
 from indicators.SMA import SMA
+from indicators.EMA import EMA
 import plotly
 import plotly.graph_objs as go
 import random
@@ -27,7 +28,7 @@ class Market:
         #will be a dictionary of lists containing values for each currency pair.
         self.listSellPrices = {}
         self.listBuyPrices = {}
-        #lists of indicator values for each indicator name
+        #dict of indicator values as a list for each indicator name
         self.indicatorValues = {}
         self.listBalace = []
         self.times = []
@@ -114,7 +115,7 @@ class Market:
         return self.indicators
 
 
-#storing all data to plot at the end
+    #storing all data to plot at the end
     def plot(self):
         #storing currencies values
         for currency in self.sellPrices:
@@ -219,28 +220,22 @@ def start(balance, timeLength, file,isPlot, isPrint, dictOfIndicators):
 
 #runs each iteration
 def run(market):
-    below = None
-    if(len(market.getAllIndicators()["largeSMA"].getAverages())) > 0:
-        
-        smallSMA = market.getAllIndicators()["smallSMA"].getAverages()[0]
-        largeSMA = market.getAllIndicators()["largeSMA"].getAverages()[0]
-        if smallSMA > largeSMA:
-            if market.holdings["EUR/USD"] <= 0:
-                
-                market.buy("EUR/USD", math.floor(market.balance * .5))
-               
-                
-        if largeSMA > smallSMA:
-            if market.holdings["EUR/USD"] >= 0:
-                market.sell("EUR/USD", math.floor(market.balance * .5))
-               
-    #gonna test sma crossing each other 
+    #buy based off of high much higher the current ema is, if it is above then buy, else sell
+    ema = market.getAllIndicators()["EMA"]
+    if len(ema.getAverages()) == ema.getLength():
+        #if ema is .0003 larger
+        if ema.getValue() > market.buyPrices["EUR/USD"] + .0003 and market.holdings["EUR/USD"] <= 0:
+            market.buy("EUR/USD", 10000)
+        elif ema.getValue() < market.sellPrices["EUR/USD"] - .0003 and market.holdings["EUR/USD"] >= 0:
+            market.sell("EUR/USD", 10000)
+    
+   
     
 
 
 
 def end(market):
-    #print(market.balance)
+    #clearing all holdings at the end
     if market.holdings["EUR/USD"] < 0:
         
         market.buy("EUR/USD",((-1) * market.holdings["EUR/USD"]))
@@ -259,19 +254,20 @@ def end(market):
         traces = []
         trace0 = go.Scatter(x =market.times ,y=market.listSellPrices["EUR/USD"] , name = "sellPrice", mode = "lines+markers")
         trace3 = go.Scatter(x =market.times ,y=market.listBuyPrices["EUR/USD"] , name = "buyPrice", mode = "lines+markers")
-        trace1 = go.Scatter(x = market.times, y=market.indicatorValues["smallSMA"], mode = "lines+markers", name = "smallSMA")
-        trace2 = go.Scatter(x = market.times, y=market.indicatorValues["largeSMA"], mode = "lines+markers", name = "largeSMA")
+        
+        
         Buys = go.Scatter(x = market.timeBuys, y=market.priceBuys, mode = "lines+markers", name = "Buys")
         Sells = go.Scatter(x = market.timeSells, y=market.priceSells, mode = "lines+markers", name = "Sells")
 
 
         traces.append(trace0)
-        traces.append(trace1)
-        traces.append(trace2)
+        
+        
         traces.append(trace3)
         traces.append(Buys)
         traces.append(Sells)
-        
+        for indica in market.getAllIndicators():
+            traces.append(go.Scatter(x = market.times, y= market.indicatorValues[indica], mode = "lines+markers", name = str(indica)))
         
         print(plotly.offline.plot(traces, auto_open = True, filename = "EURUSD.html"))
 
@@ -285,7 +281,7 @@ def end(market):
 
    
     if market.isPrint:
-        print("small: " + str(market.getAllIndicators()["smallSMA"].getLength()) + " large: " + str(market.getAllIndicators()["largeSMA"].getLength()) )
+       
         print("final balance: " + str(market.balance))
         print("\n \n \n")
         print("buys and sell times: " + str(len(market.timeBuys)) + " " + str(len(market.timeSells)))
