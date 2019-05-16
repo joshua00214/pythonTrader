@@ -2,6 +2,12 @@ It appears to be closlely related to sell price
 
 if EMA is 1.5(n) pips above sellPrice for 3(m) durations then sell (its going down)
 	continue until EMA is 1pip(l) below the the sell price
+
 if EMA is 1.5(n) pips below sellPrice for 3(m) durations then buy (its going up)
 	conintue until EMA is 1pip(l) above the sellPrice
 
+n, m, and l are from the data list passed to market to allow the multithreader to brute force
+good solutions
+note - should also have a variable length EMA but we'll just use a EMA with length 4
+and a time frame of 15 minutes, 4*15 = 60 minute EMA
+note - how much to buy/sell (assuming 10% of account now, will brute force later to see)

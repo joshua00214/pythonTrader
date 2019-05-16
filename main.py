@@ -38,6 +38,9 @@ class Market:
         self.priceSells = []
         self.timeSells = []
         self.listUnrealizedBalance = []
+
+        #list of data to allow for a bruteforce algorithm is repeatidly call this
+        self.data = [] #is declared here but initalized in start
     #buys the amount
     def buy(self, currency, amount):
         if self.balance > self.buyPrices[currency] * amount:
@@ -196,10 +199,10 @@ def openFile(market, timeLength, file):
 #TODO but start, openFile, and end inside of market with a link to the run method
 #TODO add list of data that can be sent to market
 #should not need edited
-def start(balance, timeLength, file,isPlot, isPrint, dictOfIndicators):
+def start(balance, timeLength, file,isPlot, isPrint, dictOfIndicators, data = []):
     market = Market(balance)
 
-
+    market.data = data
     #market.addIndicator("smallSMA", SMA, "EUR/USD", small)
     #market.addIndicator("largeSMA", SMA, "EUR/USD", large)
     for indic in dictOfIndicators.keys():
@@ -223,14 +226,59 @@ def start(balance, timeLength, file,isPlot, isPrint, dictOfIndicators):
 
 #runs each iteration
 def run(market):
-    #buy based off of high much higher the current ema is, if it is above then buy, else sell
+    #based off the EMA as S&R file
     ema = market.getAllIndicators()["EMA"]
+    #will state if its above/below for 3(m) length at an epsilon of 1.5(n) pips
+    m = 3
+    n = .00015 #this is the epsilon of the pips
+    l = .0001 #this is where I cut my losses when its going the wrong way.
+    isAbove = []
+    isBelow = []
     if len(ema.getAverages()) == ema.getLength():
-        #if ema is .0003 larger
-        if ema.getValue() > market.buyPrices["EUR/USD"] + .0003 and market.holdings["EUR/USD"] <= 0:
-            market.buy("EUR/USD", 10000)
-        elif ema.getValue() < market.sellPrices["EUR/USD"] - .0003 and market.holdings["EUR/USD"] >= 0:
-            market.sell("EUR/USD", 10000)
+
+        #                       storing based on past m duration
+        #need this behavior because isAbove and isBelow could both be false - it could be closer
+        #than the epsilon
+        isAboveChanged = False
+        if ema.getValue() > market.sellPrices["EUR/USD"] + n:
+            isAbove.insert(0, True)
+            isAboveChanged = True
+        isBelowChanged = False
+        if ema.getValue() < market.sellPrices["EUR/USD"] - n:
+            isBelow.insert(0, True)
+            isBelowChanged = True
+        #if isAbove or isBelow havent changed then insert a False
+        if isBelowChanged == False: #I think this is more readable
+            isBelow.insert(0, False)
+        if isAboveChanged == False:
+            isAbove.insert(0, False)
+        #if isAbove or isBelow are longer then length then pop a value
+        if len(isAbove) > m:
+            isAbove.pop()
+        if len(isBelow) > m:
+            isBelow.pop()
+        #                   check to see if I need to stop any positions
+        if market.holdings["EUR/USD"] > 0 and ema.getValue() > market.sellPrices["EUR/USD"] + l:
+            market.sell(market.holdings["EUR/USD"])
+        
+        if market.holdings["EUR/USD"] < 0 and ema.getValue() < market.sellPrices["EUR/USD"] - l:
+            market.buy((-1) * market.holdings["EUR/USD"])
+        #                   buy/sell if the EMA has been above/below long enough
+        
+        if len(isBelow) == m and len(isAbove) == m:
+            #if all the isBelows are True, then buy
+            isBuy = True
+            for below in isBelow:
+                if below == False:
+                    isBuy = False
+                    break
+            if isBuy:
+                
+
+
+
+
+
     
    
     
