@@ -145,6 +145,7 @@ class Market:
 
 #will open to file and call the run method for every new price, and update the price in the market
 #TODO allow it to work across multiple currencies
+#should not need to be edited
 def openFile(market, timeLength, file):
     #opening all files
     data = open(("data\\" + file))
@@ -193,6 +194,8 @@ def openFile(market, timeLength, file):
 }
 '''
 #TODO but start, openFile, and end inside of market with a link to the run method
+#TODO add list of data that can be sent to market
+#should not need edited
 def start(balance, timeLength, file,isPlot, isPrint, dictOfIndicators):
     market = Market(balance)
 
@@ -233,7 +236,7 @@ def run(market):
     
 
 
-
+#should not need edited
 def end(market):
     #clearing all holdings at the end
     if market.holdings["EUR/USD"] < 0:

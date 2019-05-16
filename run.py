@@ -38,7 +38,7 @@ def myThreads(listToAdd, i):
 
 if __name__ == "__main__":
     if sys.argv[1] == "True":
-        indicators = {"EMA": [EMA,"EUR/USD", 60]}
+        indicators = {"EMA": [EMA,"EUR/USD", 4]}
         start(100000, 15, file,True, True, indicators)
         exit()
     #manager syncs the list between all the processes
