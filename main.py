@@ -1,4 +1,5 @@
 #used for backtesting
+import statistics
 from indicators.SMA import SMA
 from indicators.EMA import EMA
 import plotly
@@ -8,6 +9,7 @@ import math
 from threading import Thread
 from multiprocessing import Process, Manager
 import sys
+import math
 #will contain the ability to buy/sell, balance
 class Market:
     #sets balance, and all holdings
@@ -227,66 +229,40 @@ def start(balance, timeLength, file,isPlot, isPrint, dictOfIndicators, data = []
 
 
 #runs each iteration
-x = 0 #for debuggins
+j = 0 #for debuggins
 def run(market):
-    global x #for debugging
-    x += 1 #for debugging with breakpoint
-    #based off the EMA as S&R file
-    ema = market.getAllIndicators()["EMA"]
-    #will state if its above/below for 3(m) length at an epsilon of 1.5(n) pips
-    m = market.data[3]  #the duration
-    n = market.data[2] #this is the epsilon of the pips
-    l = market.data[4] #this is where I cut my losses when its going the wrong way.
-    isAbove = market.data[0]
-    isBelow = market.data[1]
-    if len(ema.getAverages()) == ema.getLength():
 
-        #                       storing based on past m duration
-        #need this behavior because isAbove and isBelow could both be false - it could be closer
-        #than the epsilon
-        isAboveChanged = False
-        if ema.getValue() > market.sellPrices["EUR/USD"] + n:
-            isAbove.insert(0, True)
-            isAboveChanged = True
-        isBelowChanged = False
-        if ema.getValue() < market.sellPrices["EUR/USD"] - n:
-            isBelow.insert(0, True)
-            isBelowChanged = True
-        #if isAbove or isBelow havent changed then insert a False
-        if isBelowChanged == False: #I think this is more readable
-            isBelow.insert(0, False)
-        if isAboveChanged == False:
-            isAbove.insert(0, False)
-        #if isAbove or isBelow are longer then length then pop a value
-        if len(isAbove) > m:
-            isAbove.pop()
-        if len(isBelow) > m:
-            isBelow.pop()
-        #                   check to see if I need to stop any positions
-        if market.holdings["EUR/USD"] > 0 and ema.getValue() > market.sellPrices["EUR/USD"] + l:
-            market.sell("EUR/USD", market.holdings["EUR/USD"]) #closing a long position
+    global j #for debugging
+    j += 1 #for debugging with breakpoint
+    d = 15
+    e = 5
+    p = 5
+    if len(market.getIndicator("EMA").getAverages()) >= p:
+        z = []
+        x = [.0001 * i for i in range(p)]
+        #ema needs to be longer than y
+        y = market.getIndicator("EMA").getAverages()[:p]
+        for item in range(len(x)):
+            z.append(x[item] * y[item])
+        xSquared = []
+        for item in x:
+            xSquared.append(item*item)
+        m =  (    (statistics.mean(x) * statistics.mean(y)) - statistics.mean(z)     )    /   (   (statistics.mean(x) * statistics.mean(x)) - statistics.mean(xSquared)  )
+        #arctan of rise over run / or the slope over 1
+        radians = math.atan2(m, 1)
+        degrees = radians * (180 / math.pi)
+
+        #cancel already held positions if past an epsilon
+        if market.holdings["EUR/USD"] > 0 and degrees < (-1) * e:
+            market.sell("EUR/USD", market.holdings["EUR/USD"])
+        if market.holdings["EUR/USD"] < 0 and degrees > e:
+            market.buy("EUR/USD", (-1) * market.holdings["EUR/USD"])
         
-        if market.holdings["EUR/USD"] < 0 and ema.getValue() < market.sellPrices["EUR/USD"] - l:
-            market.buy("EUR/USD",(-1) * market.holdings["EUR/USD"]) #closing a short position
-        #                   buy/sell if the EMA has been above/below long enough
-        
-        if len(isBelow) == m and len(isAbove) == m:
-            #if all the isBelows are True, then buy
-            isBuy = True
-            for below in isBelow:
-                if below == False:
-                    isBuy = False
-                    break
-            if isBuy and market.holdings["EUR/USD"] <=0:
-                market.buy("EUR/USD", market.unrealizedBalance * .1)#going long
-            #if all the isAboves are True, then sell
-            isSell = True
-            for above in isAbove:
-                if above == False:
-                    isSell = False
-                    break
-            if isSell and market.holdings["EUR/USD"] >= 0:
-                market.sell("EUR/USD", market.unrealizedBalance * .1)#going short
+        #buy/sell positions acording to txt file
+        if market.holdings["EUR/USD"] <=0 and degrees >= d:
+            market.buy("EUR/USD", 10000)
+        if market.holdings["EUR/USD"] >=0 and degrees <= (-1) *d:
+            market.sell("EUR/USD", 10000)
 
 
 

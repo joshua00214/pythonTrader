@@ -1,0 +1,9 @@
+if the slope of the Regression line is +15(d) degres  with 5(p) points of accuracy
+its increasing, so buy
+
+if the slope of the regression line is -15(d) degres with 5(p) points of accuracy
+its decreasing, so sell
+
+cancel positions when its facing 5(e) degrees the other direction
+
+test run with a 1 hour EMA at 15 minute time interval:

@@ -11,7 +11,7 @@ import sys
 
 
 
-file = "EURUSD2018.csv"
+file = "EURUSDFEB.csv"
 
 
 
@@ -42,12 +42,12 @@ def myThreads(listToAdd, i):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) == 2:
-        indicators = {"EMA": [EMA,"EUR/USD", 34]}
+    if True or len(sys.argv) == 2:
+        indicators = {"EMA": [EMA,"EUR/USD", 10]}
         isAbove = []
         isBelow = []
-        data = [isAbove, isBelow, 4 * .0001, 5, 2 * .0001]#n, m, l
-        start(100000, 1440, file,True, True, indicators, data)
+        data = []#n, m, l
+        start(100000, 60, file,True, True, indicators, data)
         exit()
     #manager syncs the list between all the processes
     manager = Manager()
