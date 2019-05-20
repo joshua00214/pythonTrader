@@ -17,37 +17,34 @@ file = "EURUSDFEB.csv"
 
 def myThreads(listToAdd, i):
     #initial value to compaire to
-    indicators = {"smallSMA": [SMA,"EUR/USD", 110], "largeSMA": [SMA, "EUR/USD", 200]}
+    indicators = {"EMA": [EMA,"EUR/USD", 4]}
+    isAbove = []
+    isBelow = []
+    n = 1.5 * .0001
+    m = 3 
+    l = 1 * .0001
+    data = [isAbove, isBelow, n, m, l]
     #originial value to compare to
-    value = start(100000, 15, file,False, False, indicators)
+    value = start(100000, 15, file,False, False, indicators, data)
     #run through the market x times, comparing it to value and grabbing the best
-    for x in range(50):
-        a = random.randint(2, 500)
-        b = random.randint(2, 500)
-    
-        if a > b:
-            indicators["smallSMA"][2] = b
-            indicators["largeSMA"][2] = a
-
-           
-        
-        else:
-            indicators["smallSMA"][2] = a
-            indicators["largeSMA"][2] = b
-            
-        val = start(100000, 15,file,False, False,indicators)
-        print("a: " + str(a) +  " b: " + str(b) + " val: " + str(val.balance) + " at number: " + str(x) + " thread #: " + str(i) + "small: " + str(val.getAllIndicators()["smallSMA"].getLength()))
+    for x in range(1000):
+        n = random.randint(1, 20) * .0001
+        m = random.randint(1, 20)
+        l = random.randint(1, 20) * .0001
+        data = [isAbove, isBelow, n, m, l]
+        val = start(100000, 15, file, False, False, indicators, data)
+        print("thread: " + str(i) + " starting number: " + str(x) + " n,m,l: " + str(data[2]) + " " + str(data[3])+ " " + str(data[4]) + " balance: " + str(val.balance))
         if val.balance > value.balance:
             value = val
     listToAdd[i] = value
 
 
 if __name__ == "__main__":
-    if True or sys.argv[1] == "True":
+    if sys.argv[1] == "True":
         indicators = {"EMA": [EMA,"EUR/USD", 4]}
         isAbove = []
         isBelow = []
-        data = [isAbove, isBelow]
+        data = [isAbove, isBelow, 1 * .0001, 20, 7 * .0001]
         start(100000, 15, file,True, True, indicators, data)
         exit()
     #manager syncs the list between all the processes
@@ -73,7 +70,7 @@ if __name__ == "__main__":
         if bestMarkets[x].balance > best.balance:
             best = bestMarkets[x]
 
-    #prints the best moving averages of the market
-    print("smallSMA and largeSMA: ")
-    print(best.getIndicator("smallSMA").getLength())
-    print(best.getIndicator("largeSMA").getLength())
+    print("balance: ")
+    print(best.balance)
+    print("data: ")
+    print(best.data)

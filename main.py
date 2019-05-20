@@ -227,14 +227,14 @@ def start(balance, timeLength, file,isPlot, isPrint, dictOfIndicators, data = []
 #runs each iteration
 x = 0 #for debuggins
 def run(market):
-    global x
-    x += 1
+    global x #for debugging
+    x += 1 #for debugging with breakpoint
     #based off the EMA as S&R file
     ema = market.getAllIndicators()["EMA"]
     #will state if its above/below for 3(m) length at an epsilon of 1.5(n) pips
-    m = 3 #the duration
-    n = .00015 #this is the epsilon of the pips
-    l = .0001 #this is where I cut my losses when its going the wrong way.
+    m = market.data[3]  #the duration
+    n = market.data[2] #this is the epsilon of the pips
+    l = market.data[4] #this is where I cut my losses when its going the wrong way.
     isAbove = market.data[0]
     isBelow = market.data[1]
     if len(ema.getAverages()) == ema.getLength():
@@ -347,10 +347,12 @@ def end(market):
         print("final balance: " + str(market.balance))
         print("\n \n \n")
         print("buys and sell times: " + str(len(market.timeBuys)) + " " + str(len(market.timeSells)))
+        '''
         print(market.timeBuys)
         print(market.priceBuys)
         print(market.timeSells)
         print(market.priceSells)
+        '''
     return market
 #x = market.listSellPrices["EUR/USD"]
 #y= market.times

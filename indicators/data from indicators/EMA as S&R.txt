@@ -11,3 +11,6 @@ good solutions
 note - should also have a variable length EMA but we'll just use a EMA with length 4
 and a time frame of 15 minutes, 4*15 = 60 minute EMA
 note - how much to buy/sell (assuming 10% of account now, will brute force later to see)
+
+multithreading test with 800 tries
+1< n, m, l < 10

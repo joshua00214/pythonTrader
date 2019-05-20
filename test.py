@@ -1,10 +1,8 @@
 import sys
-
-x = 1
-def test():
-    global x
-    x += 1
+import random
 
 
-test()
+x = 1.5
+
+x *= .0001
 print(x)
