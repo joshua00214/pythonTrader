@@ -225,15 +225,18 @@ def start(balance, timeLength, file,isPlot, isPrint, dictOfIndicators, data = []
 
 
 #runs each iteration
+x = 0 #for debuggins
 def run(market):
+    global x
+    x += 1
     #based off the EMA as S&R file
     ema = market.getAllIndicators()["EMA"]
     #will state if its above/below for 3(m) length at an epsilon of 1.5(n) pips
-    m = 3
+    m = 3 #the duration
     n = .00015 #this is the epsilon of the pips
     l = .0001 #this is where I cut my losses when its going the wrong way.
-    isAbove = []
-    isBelow = []
+    isAbove = market.data[0]
+    isBelow = market.data[1]
     if len(ema.getAverages()) == ema.getLength():
 
         #                       storing based on past m duration
@@ -259,10 +262,10 @@ def run(market):
             isBelow.pop()
         #                   check to see if I need to stop any positions
         if market.holdings["EUR/USD"] > 0 and ema.getValue() > market.sellPrices["EUR/USD"] + l:
-            market.sell(market.holdings["EUR/USD"])
+            market.sell("EUR/USD", market.holdings["EUR/USD"]) #closing a long position
         
         if market.holdings["EUR/USD"] < 0 and ema.getValue() < market.sellPrices["EUR/USD"] - l:
-            market.buy((-1) * market.holdings["EUR/USD"])
+            market.buy("EUR/USD",(-1) * market.holdings["EUR/USD"]) #closing a short position
         #                   buy/sell if the EMA has been above/below long enough
         
         if len(isBelow) == m and len(isAbove) == m:
@@ -272,8 +275,16 @@ def run(market):
                 if below == False:
                     isBuy = False
                     break
-            if isBuy:
-                
+            if isBuy and market.holdings["EUR/USD"] <=0:
+                market.buy("EUR/USD", market.balance * .1)#going long
+            #if all the isAboves are True, then sell
+            isSell = True
+            for above in isAbove:
+                if above == False:
+                    isSell = False
+                    break
+            if isSell and market.holdings["EUR/USD"] >= 0:
+                market.sell("EUR/USD", market.balance * .1)#going short
 
 
 

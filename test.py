@@ -1,5 +1,10 @@
 import sys
 
+x = 1
+def test():
+    global x
+    x += 1
 
-test = [1, 2, 3]
-print(len(test))
+
+test()
+print(x)

@@ -8,7 +8,13 @@ from threading import Thread
 from multiprocessing import Process, Manager
 from main import start
 import sys
+
+
+
 file = "EURUSDFEB.csv"
+
+
+
 def myThreads(listToAdd, i):
     #initial value to compaire to
     indicators = {"smallSMA": [SMA,"EUR/USD", 110], "largeSMA": [SMA, "EUR/USD", 200]}
@@ -37,9 +43,12 @@ def myThreads(listToAdd, i):
 
 
 if __name__ == "__main__":
-    if sys.argv[1] == "True":
+    if True or sys.argv[1] == "True":
         indicators = {"EMA": [EMA,"EUR/USD", 4]}
-        start(100000, 15, file,True, True, indicators)
+        isAbove = []
+        isBelow = []
+        data = [isAbove, isBelow]
+        start(100000, 15, file,True, True, indicators, data)
         exit()
     #manager syncs the list between all the processes
     manager = Manager()
