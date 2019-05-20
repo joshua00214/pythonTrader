@@ -23,3 +23,7 @@ going to test out a weighted sma
 
 
 3) add a way to pass a list of data to the run method from the threading method
+
+
+-note
+	try using the moving averages as a trend line - if its going down then short, if its going up then go long.

@@ -12,7 +12,7 @@ import sys
 class Market:
     #sets balance, and all holdings
     #balance is always realized, so may be inaccurate when shorting
-    def __init__(self, balance = 100000, spread = 0.0005): #5 pip spread
+    def __init__(self, balance = 100000, spread = 0.0002): #2 pip spread
         self.balance = balance
         self.holdings = {"EUR/USD": 0}
         self.buyPrices = {"EUR/USD": 0}
@@ -278,7 +278,7 @@ def run(market):
                     isBuy = False
                     break
             if isBuy and market.holdings["EUR/USD"] <=0:
-                market.buy("EUR/USD", market.balance * .1)#going long
+                market.buy("EUR/USD", market.unrealizedBalance * .1)#going long
             #if all the isAboves are True, then sell
             isSell = True
             for above in isAbove:
@@ -286,7 +286,7 @@ def run(market):
                     isSell = False
                     break
             if isSell and market.holdings["EUR/USD"] >= 0:
-                market.sell("EUR/USD", market.balance * .1)#going short
+                market.sell("EUR/USD", market.unrealizedBalance * .1)#going short
 
 
 

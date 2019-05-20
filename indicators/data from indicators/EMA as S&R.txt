@@ -14,7 +14,18 @@ note - how much to buy/sell (assuming 10% of account now, will brute force later
 
 multithreading test with 800 tries
 1< n, m, l < 10
-time frame = 15 with a EMA length of 4 so 1 hour EMA
 best n,m,l: .0001, 20, .0007
 
+Changed pip spread to a realistic amount, 2pips
+best, n,m,l: .0001, 50, .0025
+ema: 34 timefrace is 15 minutes
+-note doesn't work very good throughout the year
+
 now testing with differing time frame.
+with a 1 day time frame it still doesn't make much money
+
+
+RESULTS:
+apparently deciding to buy when the EMA is above/below is a bad idea
+im going to attempt to use the EMA as a trend indicator - if its trending down then short, if its
+trending up then buy
