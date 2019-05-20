@@ -28,9 +28,11 @@ def myThreads(listToAdd, i):
     value = start(100000, 15, file,False, False, indicators, data)
     #run through the market x times, comparing it to value and grabbing the best
     for x in range(1000):
-        n = random.randint(1, 20) * .0001
-        m = random.randint(1, 20)
-        l = random.randint(1, 20) * .0001
+        n = random.randint(1, 50) * .0001
+        m = random.randint(1, 50)
+        l = random.randint(1, 50) * .0001
+        indicLength = random.randint(1, 50)
+        indicators["EMA"][2] = indicLength
         data = [isAbove, isBelow, n, m, l]
         val = start(100000, 15, file, False, False, indicators, data)
         print("thread: " + str(i) + " starting number: " + str(x) + " n,m,l: " + str(data[2]) + " " + str(data[3])+ " " + str(data[4]) + " balance: " + str(val.balance))
@@ -40,7 +42,7 @@ def myThreads(listToAdd, i):
 
 
 if __name__ == "__main__":
-    if sys.argv[1] == "True":
+    if len(sys.argv) == 2:
         indicators = {"EMA": [EMA,"EUR/USD", 4]}
         isAbove = []
         isBelow = []
@@ -60,10 +62,13 @@ if __name__ == "__main__":
     #wait until each of the threads have finished
     for t in allThreads:
         t.join()
+        pass
 
-    print("PRINTING ALL ITEMS IN BEST")
-    for item in bestMarkets:
-        print(item)
+
+    #print("PRINTING ALL ITEMS IN BEST") just prints memory location, not needed
+    #for item in bestMarkets:
+    #    print(item)
+
     #finding the market that gave the best balance
     best = bestMarkets[0]
     for x in range(numOfThreads):
@@ -74,3 +79,5 @@ if __name__ == "__main__":
     print(best.balance)
     print("data: ")
     print(best.data)
+    print("indicators: " )
+    print(best.dictOfIndicators)

@@ -14,3 +14,7 @@ note - how much to buy/sell (assuming 10% of account now, will brute force later
 
 multithreading test with 800 tries
 1< n, m, l < 10
+time frame = 15 with a EMA length of 4 so 1 hour EMA
+best n,m,l: .0001, 20, .0007
+
+now testing with differing time frame.

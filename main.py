@@ -41,6 +41,7 @@ class Market:
 
         #list of data to allow for a bruteforce algorithm is repeatidly call this
         self.data = [] #is declared here but initalized in start
+        self.dictOfIndicators = {}
     #buys the amount
     def buy(self, currency, amount):
         if self.balance > self.buyPrices[currency] * amount:
@@ -205,6 +206,7 @@ def start(balance, timeLength, file,isPlot, isPrint, dictOfIndicators, data = []
     market.data = data
     #market.addIndicator("smallSMA", SMA, "EUR/USD", small)
     #market.addIndicator("largeSMA", SMA, "EUR/USD", large)
+    market.dictOfIndicators = dictOfIndicators
     for indic in dictOfIndicators.keys():
         #each value is an array with 0th index the function and the rest as args
        # print(many(*dictOfIndicators[indic][1:]))
