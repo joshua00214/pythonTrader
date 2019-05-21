@@ -21,6 +21,7 @@ class Market:
         self.sellPrices = {"EUR/USD": 0}
         self.spread = spread
         self.unrealizedBalance = balance
+        self.balanceAtZeroHoldings = balance
         #dictionarry of indicators with their names mapped to indicator objects
         self.indicators = {}
         self.date = None
@@ -40,12 +41,21 @@ class Market:
         self.priceSells = []
         self.timeSells = []
         self.listUnrealizedBalance = []
+        self.listBalanceAtZeroHoldings = []
 
         #list of data to allow for a bruteforce algorithm is repeatidly call this
         self.data = [] #is declared here but initalized in start
         self.dictOfIndicators = {}
+
+        #stopLos and takeProfit set to -1 means ignore them
+        self.stopLoss = -1
+        self.takeProfit = -1
     #buys the amount
-    def buy(self, currency, amount):
+    def buy(self, currency, amount, takeProfit = -1, stopLoss = -1):
+        if self.holdings[currency] == 0:
+            self.balanceAtZeroHoldings = self.unrealizedBalance
+            if self.unrealizedBalance != self.balance:
+                print("unrealizedBalance and balance should be equal here")
         if self.balance > self.buyPrices[currency] * amount:
             self.balance -= self.buyPrices[currency] * amount
             self.holdings[currency] += amount
@@ -58,7 +68,10 @@ class Market:
         
     #sells that amount
     def sell(self, currency, amount):
-        
+        if self.holdings[currency] == 0:
+            self.balanceAtZeroHoldings = self.unrealizedBalance
+            if self.unrealizedBalance != self.balance:
+                print("unrealizedBalance and balance should be equal here")
         if self.holdings[currency] >= amount:
             self.holdings[currency] -= amount
             self.balance += amount * self.sellPrices[currency]
@@ -93,6 +106,8 @@ class Market:
 
         #remember not to plot for every currency we add
         self.plot()
+
+        #taking stoploss/the profit gained.
         
 
 
@@ -147,6 +162,7 @@ class Market:
 
         self.listBalace.append(self.balance)
         self.listUnrealizedBalance.append(self.unrealizedBalance)
+        self.listBalanceAtZeroHoldings.append(self.balanceAtZeroHoldings)
 
 
 #will open to file and call the run method for every new price, and update the price in the market
@@ -241,13 +257,17 @@ def run(market):
         z = []
         x = [.0001 * i for i in range(p)]
         #ema needs to be longer than y
+        #y also needs reversed from this
         y = market.getIndicator("EMA").getAverages()[:p]
+        y.reverse()
         for item in range(len(x)):
             z.append(x[item] * y[item])
         xSquared = []
         for item in x:
             xSquared.append(item*item)
-        m =  (    (statistics.mean(x) * statistics.mean(y)) - statistics.mean(z)     )    /   (   (statistics.mean(x) * statistics.mean(x)) - statistics.mean(xSquared)  )
+        #this m gives a value that is negative 
+        #m =  (    (statistics.mean(x) * statistics.mean(y)) - statistics.mean(z)     )    /   (   (statistics.mean(x) * statistics.mean(x)) - statistics.mean(xSquared)  )
+        m = ( (len(x) * sum(z))  - (sum(x) * sum(y))     ) / ( (len(x) * sum(xSquared)) - (sum(x) * sum(x))          )
         #arctan of rise over run / or the slope over 1
         radians = math.atan2(m, 1)
         degrees = radians * (180 / math.pi)
@@ -315,9 +335,9 @@ def end(market):
         
         balance_trade = go.Scatter(x = market.times, y=market.listBalace, mode = "lines+markers", name = "Balace")
         ubalance_trade = go.Scatter(x = market.times, y=market.listUnrealizedBalance, mode = "lines+markers", name = "UnrealizedBalance")
-        
+        zero_balance = go.Scatter(x = market.times, y = market.listBalanceAtZeroHoldings, mode = "lines+markers", name = "Balance at 0 holdings")
   
-        print(plotly.offline.plot([balance_trade, ubalance_trade], auto_open = True, filename = "balance.html"))
+        print(plotly.offline.plot([balance_trade, ubalance_trade, zero_balance], auto_open = True, filename = "balance.html"))
 
    
     if market.isPrint:

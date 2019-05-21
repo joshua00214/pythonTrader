@@ -7,8 +7,8 @@ import plotly.graph_objs as go
 if len(sys.argv) > 1:
     print(sys.argv[1])
 
-x = [i for i in range(5)]
-y = [4, 5,2,2,2]
+x = [.0001 * i for i in range(5)]
+y = [ 1.145789, 1.145795,1.145807,1.145852,1.145831]
 
 z = []
 
