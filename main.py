@@ -250,9 +250,9 @@ def run(market):
 
     global j #for debugging
     j += 1 #for debugging with breakpoint
-    d = 15
-    e = 5
-    p = 5
+    d = market.data[0]
+    e = market.data[1]
+    p = market.data[2]
     if len(market.getIndicator("EMA").getAverages()) >= p:
         z = []
         x = [.0001 * i for i in range(p)]
@@ -283,6 +283,8 @@ def run(market):
             market.buy("EUR/USD", 10000)
         if market.holdings["EUR/USD"] >=0 and degrees <= (-1) *d:
             market.sell("EUR/USD", 10000)
+
+            
 
 
 

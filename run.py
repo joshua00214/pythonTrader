@@ -17,36 +17,34 @@ file = "EURUSDFEB.csv"
 
 def myThreads(listToAdd, i):
     #initial value to compaire to
-    indicators = {"EMA": [EMA,"EUR/USD", 4]}
-    isAbove = []
-    isBelow = []
-    n = 1.5 * .0001
-    m = 3 
-    l = 1 * .0001
-    data = [isAbove, isBelow, n, m, l]
+    indicators = {"EMA": [EMA,"EUR/USD", 10]}
+
+    d = 15
+    e = 5
+    p = 5
+    data = [d, e, p]
     #originial value to compare to
-    value = start(100000, 1440, file,False, False, indicators, data)
+    value = start(100000, 60, file,False, False, indicators, data)
     #run through the market x times, comparing it to value and grabbing the best
     for x in range(100):
-        n = random.randint(1, 500) * .00001
-        m = random.randint(1, 100)
-        l = random.randint(1, 500) * .00001
+        d = random.randint(1, 90) 
+        e = random.randint(1, 90)
+        p = random.randint(1, 500) 
         indicLength = random.randint(1, 50)
         indicators["EMA"][2] = indicLength
-        data = [isAbove, isBelow, n, m, l]
+        data = [d, e, p]
         val = start(100000, 1440, file, False, False, indicators, data)
-        print("thread: " + str(i) + " starting number: " + str(x) + " n,m,l: " + str(data[2]) + " " + str(data[3])+ " " + str(data[4]) + " balance: " + str(val.balance))
+        print("thread: " + str(i) + " starting number: " + str(x) +" balance: " + str(val.balance))
         if val.balance > value.balance:
             value = val
     listToAdd[i] = value
 
 
 if __name__ == "__main__":
-    if True or len(sys.argv) == 2:
-        indicators = {"EMA": [EMA,"EUR/USD", 10]}
-        isAbove = []
-        isBelow = []
-        data = []#n, m, l
+    if len(sys.argv) != 2:
+        indicators = {"EMA": [SMA,"EUR/USD", 15]}
+        
+        data = [15, 5, 10]#d, e, p
         start(100000, 60, file,True, True, indicators, data)
         exit()
     #manager syncs the list between all the processes

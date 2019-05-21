@@ -27,3 +27,6 @@ going to test out a weighted sma
 
 -note
 	try using the moving averages as a trend line - if its going down then short, if its going up then go long.
+
+add stoploss and takeprofit
+try a strategy relatingn the distance between SMA/EMA and the value ex... if the SMA is 5 pips higher, then sell 
