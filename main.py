@@ -2,6 +2,7 @@
 import statistics
 from indicators.SMA import SMA
 from indicators.EMA import EMA
+from indicators.RSI import RSI
 import plotly
 import plotly.graph_objs as go
 import random
@@ -207,7 +208,8 @@ def openFile(market, timeLength, file):
                 unrealizedBalance = market.balance
         update = False
         if unrealizedBalance - market.balanceAtZeroHoldings < market.stopLoss and market.stopLoss != -1:
-            print("taking loss" + date + minute)
+            if market.isPrint:
+                print("taking loss" + date + minute)
             market.stopLoss = -1
             market.sellPrices["EUR/USD"] = sell
             market.buyPrices["EUR/USD"] = sell + market.spread
@@ -217,7 +219,8 @@ def openFile(market, timeLength, file):
                 market.buy("EUR/USD", (-1) * market.holdings["EUR/USD"])
             update = True
         if unrealizedBalance - market.balanceAtZeroHoldings > market.takeProfit and market.takeProfit != -1:
-            print("taking profit: " + date + minute)
+            if market.isPrint:
+                print("taking profit: " + date + minute)
             market.takeProfit = -1
             market.sellPrices["EUR/USD"] = sell
             market.buyPrices["EUR/USD"] = sell + market.spread
@@ -290,43 +293,8 @@ def run(market):
 
     global j #for debugging
     j += 1 #for debugging with breakpoint
-    d = market.data[0]
-    e = market.data[1]
-    p = market.data[2]
-    if len(market.getIndicator("EMA").getAverages()) >= p:
-        z = []
-        x = [.0001 * i for i in range(p)]
-        #ema needs to be longer than y
-        #y also needs reversed from this
-        y = market.getIndicator("EMA").getAverages()[:p]
-        y.reverse()
-        for item in range(len(x)):
-            z.append(x[item] * y[item])
-        xSquared = []
-        for item in x:
-            xSquared.append(item*item)
-        #this m gives a value that is negative 
-        #m =  (    (statistics.mean(x) * statistics.mean(y)) - statistics.mean(z)     )    /   (   (statistics.mean(x) * statistics.mean(x)) - statistics.mean(xSquared)  )
-        m = ( (len(x) * sum(z))  - (sum(x) * sum(y))     ) / ( (len(x) * sum(xSquared)) - (sum(x) * sum(x))          )
-        #arctan of rise over run / or the slope over 1
-        radians = math.atan2(m, 1)
-        degrees = radians * (180 / math.pi)
-
-        #cancel already held positions if past an epsilon
-        if market.holdings["EUR/USD"] > 0 and degrees < (-1) * e:
-            market.sell("EUR/USD", market.holdings["EUR/USD"])
-        if market.holdings["EUR/USD"] < 0 and degrees > e:
-            market.buy("EUR/USD", (-1) * market.holdings["EUR/USD"])
-        
-        #buy/sell positions acording to txt file
-        if market.holdings["EUR/USD"] <=0 and degrees >= d:
-            market.buy("EUR/USD", 10000)
-            market.stopLoss = -10
-            #market.takeProfit = 10
-        if market.holdings["EUR/USD"] >=0 and degrees <= (-1) *d:
-            market.sell("EUR/USD", 10000)
-            market.stopLoss = -10
-           # market.takeProfit = 10
+   
+           
 
 
 
@@ -373,8 +341,11 @@ def end(market):
         traces.append(Buys)
         traces.append(Sells)
         for indica in market.getAllIndicators():
-            traces.append(go.Scatter(x = market.times, y= market.indicatorValues[indica], mode = "lines+markers", name = str(indica)))
-        
+            if market.getIndicator(indica).isPrint:
+                traces.append(go.Scatter(x = market.times, y= market.indicatorValues[indica], mode = "lines+markers", name = str(indica)))
+            else:
+                new_trace = go.Scatter(x = market.times, y = market.indicatorValues[indica], mode = "lines+markers", name = str(indica))
+                plotly.offline.plot([new_trace], auto_open = True, filename = str(indica) + ".html")
         print(plotly.offline.plot(traces, auto_open = True, filename = "EURUSD.html"))
 
 

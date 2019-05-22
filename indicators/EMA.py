@@ -16,8 +16,9 @@ class EMA(Indicator):
         self.averages = []
         self.length = length
         self.k = 2 / (length + 1)
+        
         super().__init__(currency)
-    
+        self.isPrint = True
     def update(self, value):
         #adding next value to list of values
         

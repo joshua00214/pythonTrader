@@ -5,8 +5,9 @@ class SMA(Indicator):
         self.values = []
         self.averages = []
         self.length = length
+        
         super().__init__(currency)
-    
+        self.isPrint = True
     def update(self, value):
         #adding next value to list of values
         self.values.insert(0, value)

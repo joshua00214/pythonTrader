@@ -1,5 +1,6 @@
 from indicators.SMA import SMA
 from indicators.EMA import EMA
+from indicators.RSI import RSI
 import plotly
 import plotly.graph_objs as go
 import random
@@ -42,9 +43,9 @@ def myThreads(listToAdd, i):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        indicators = {"EMA": [SMA,"EUR/USD", 15]}
+        indicators = {"EMA": [RSI,"EUR/USD", 14]}
         
-        data = [15, 5, 10]#d, e, p
+        data = []#d, e, p
         start(100000, 60, file,True, True, indicators, data)
         exit()
     #manager syncs the list between all the processes
