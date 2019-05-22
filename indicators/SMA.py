@@ -1,12 +1,12 @@
 from .Indicators import Indicator
 #note- length is proportinal to the time interval being used
 class SMA(Indicator):
-    def __init__(self, currency, length):
+    def __init__(self, market, currency, length):
         self.values = []
         self.averages = []
         self.length = length
-        
-        super().__init__(currency)
+       
+        super().__init__(market, currency)
         self.isPrint = True
     def update(self, value):
         #adding next value to list of values

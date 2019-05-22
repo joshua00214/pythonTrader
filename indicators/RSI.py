@@ -1,7 +1,7 @@
 from .Indicators import Indicator
 
 class RSI(Indicator):
-    def __init__(self, currency, length):
+    def __init__(self, market, currency, length):
         self.length = length
         self.forexPrices = []
         self.avgPercentGains = []
@@ -9,7 +9,7 @@ class RSI(Indicator):
         self.RSI = -1
         if length % 2 != 0:
             raise Exception("length of RSI indicator must be even to find an average percent gain/loss")
-        super().__init__(currency)
+        super().__init__(market, currency)
         
     def update(self, price):
         self.forexPrices.insert(0, price)

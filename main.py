@@ -130,7 +130,8 @@ class Market:
 
     #indic must be a class that extends Indicators.Indicator 
     def addIndicator(self, name, indic, *args):
-        self.indicators[name] = indic(*args)
+        
+        self.indicators[name] = indic(self, *args)
     
 
     def getIndicator(self, name):
@@ -294,7 +295,9 @@ def run(market):
     global j #for debugging
     j += 1 #for debugging with breakpoint
    
-           
+    MACD = market.getIndicator("MACD")
+    if MACD.signalLine in market.indicatorValues:
+        pass
 
 
 
@@ -340,11 +343,14 @@ def end(market):
         traces.append(trace3)
         traces.append(Buys)
         traces.append(Sells)
-        for indica in market.getAllIndicators():
-            if market.getIndicator(indica).isPrint:
+        for indica in market.indicatorValues.keys():
+            #this functinallty is needed to plot indicators that are within indicators
+            #note the html file can be reopened and veiwed differently
+            if indica not in market.getAllIndicators() or market.getIndicator(indica).isPrint:
                 traces.append(go.Scatter(x = market.times, y= market.indicatorValues[indica], mode = "lines+markers", name = str(indica)))
             else:
                 new_trace = go.Scatter(x = market.times, y = market.indicatorValues[indica], mode = "lines+markers", name = str(indica))
+                print(indica)
                 plotly.offline.plot([new_trace], auto_open = True, filename = str(indica) + ".html")
         print(plotly.offline.plot(traces, auto_open = True, filename = "EURUSD.html"))
 

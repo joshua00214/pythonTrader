@@ -11,13 +11,13 @@ y = yesterday
 '''
 #note- length is proportinal to the time interval being used
 class EMA(Indicator):
-    def __init__(self, currency, length):
+    def __init__(self,market,  currency, length):
         self.values = []
         self.averages = []
         self.length = length
         self.k = 2 / (length + 1)
         
-        super().__init__(currency)
+        super().__init__(market, currency)
         self.isPrint = True
     def update(self, value):
         #adding next value to list of values
@@ -49,6 +49,7 @@ class EMA(Indicator):
     def getValue(self):
         if len(self.averages) == self.length:
             return self.averages[0]
+        
 
     def getLength(self):
         return self.length

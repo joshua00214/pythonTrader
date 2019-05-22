@@ -1,5 +1,5 @@
 class Indicator:
-    def __init__(self, currency):
+    def __init__(self,market, currency):
         self.currency = currency
         #default to printwith is false
         self.isPrint = False
