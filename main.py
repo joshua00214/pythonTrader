@@ -101,14 +101,19 @@ class Market:
         self.date = date
         self.minute = minute
 
+
+        #taking stoploss/the profit gained.
+        
         #TODO put these method calls in their own method, shouldn't be ran for every currency
         self.updateUnrealizedBalance()
 
         #remember not to plot for every currency we add
         self.plot()
 
-        #taking stoploss/the profit gained.
         
+    #if the difference between what I had and what I currently have is this much negative, then take the loss
+    #this will work best if the time interval is set to 1 minute and everything else is modified
+   
 
 
     def updateUnrealizedBalance(self):
@@ -178,24 +183,59 @@ def openFile(market, timeLength, file):
     x = 0
     line = data.readline()
     #TODO add avaliability for other currencies
-   
+    unrealizedBalance = market.unrealizedBalance
     while(line != ""):
         #adding each new price to market object
-        
-        
-        if(timeLength - x == 0):
+        #stop loss and takeProfit need to be ran every minute
+        listFromLine = line.split(",")
             
-            listFromLine = line.split(",")
+        sell = float(listFromLine[5]) #grabbing the closing price in the file
             
-            sell = float(listFromLine[5]) #grabbing the closing price in the file
+        date = listFromLine[0]
+        minute = listFromLine[1]
+
+        #getting a mock unrealized balance
+    
+        for currency in list(market.holdings.keys()):
+    
+            if market.holdings[currency] < 0:
+                unrealizedBalance = float(market.balance) - float(float(market.holdings[currency]) * float(-1) * float(sell + market.spread))
+            if market.holdings[currency] > 0:
+                unrealizedBalance = market.balance + (market.holdings[currency] * sell)
+
+            if market.holdings[currency] == 0:
+                unrealizedBalance = market.balance
+        update = False
+        if unrealizedBalance - market.balanceAtZeroHoldings < market.stopLoss and market.stopLoss != -1:
+            print("taking loss" + date + minute)
+            market.stopLoss = -1
+            market.sellPrices["EUR/USD"] = sell
+            market.buyPrices["EUR/USD"] = sell + market.spread
+            if market.holdings["EUR/USD"] > 0:
+                market.sell("EUR/USD", market.holdings["EUR/USD"])
+            elif market.holdings["EUR/USD"] < 0:
+                market.buy("EUR/USD", (-1) * market.holdings["EUR/USD"])
+            update = True
+        if unrealizedBalance - market.balanceAtZeroHoldings > market.takeProfit and market.takeProfit != -1:
+            print("taking profit: " + date + minute)
+            market.takeProfit = -1
+            market.sellPrices["EUR/USD"] = sell
+            market.buyPrices["EUR/USD"] = sell + market.spread
+            if market.holdings["EUR/USD"] > 0:
+                market.sell("EUR/USD", market.holdings["EUR/USD"])
+            elif market.holdings["EUR/USD"] < 0:
+                market.buy("EUR/USD", (-1) * market.holdings["EUR/USD"])
+            update = True
+        if(timeLength - x == 0  or update):
             
-            date = listFromLine[0]
-            minute = listFromLine[1]
+            
             market.updatePrice(sell, date, minute)
                 
             
             #running the run method
             run(market)
+            #resetting unrealizedBalance
+            unrealizedBalance = market.unrealizedBalance
             x = 0
         x += 1
         line = data.readline()
@@ -281,10 +321,14 @@ def run(market):
         #buy/sell positions acording to txt file
         if market.holdings["EUR/USD"] <=0 and degrees >= d:
             market.buy("EUR/USD", 10000)
+            market.stopLoss = -10
+            #market.takeProfit = 10
         if market.holdings["EUR/USD"] >=0 and degrees <= (-1) *d:
             market.sell("EUR/USD", 10000)
+            market.stopLoss = -10
+           # market.takeProfit = 10
 
-            
+
 
 
 
