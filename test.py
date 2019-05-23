@@ -4,11 +4,11 @@ import statistics
 import math
 import plotly
 import plotly.graph_objs as go
-if len(sys.argv) > 1:
-    print(sys.argv[1])
-test = [1,2,3]
-for item in range(len(test)):
-    print(item)
+
+
+
+sar = []
+print(len(sar))
 
 
 '''

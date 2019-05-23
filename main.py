@@ -3,6 +3,8 @@ import statistics
 from indicators.SMA import SMA
 from indicators.EMA import EMA
 from indicators.RSI import RSI
+from indicators.MACD import MACD
+from indicators.SAR import SAR
 import plotly
 import plotly.graph_objs as go
 import random
@@ -23,6 +25,9 @@ class Market:
         self.spread = spread
         self.unrealizedBalance = balance
         self.balanceAtZeroHoldings = balance
+        #was added for parabolic sar, can also use with candleSticks
+        self.low = 0
+        self.high = 0
         #dictionarry of indicators with their names mapped to indicator objects
         self.indicators = {}
         self.date = None
@@ -188,7 +193,7 @@ def openFile(market, timeLength, file):
     unrealizedBalance = market.unrealizedBalance
     while(line != ""):
         #adding each new price to market object
-        #stop loss and takeProfit need to be ran every minute
+        #   stop loss and takeProfit need to be ran every minute
         listFromLine = line.split(",")
             
         sell = float(listFromLine[5]) #grabbing the closing price in the file
@@ -230,16 +235,25 @@ def openFile(market, timeLength, file):
             elif market.holdings["EUR/USD"] < 0:
                 market.buy("EUR/USD", (-1) * market.holdings["EUR/USD"])
             update = True
+        #calculating the high/lows of the period
+        if sell > market.high:
+            market.high = sell
+        if sell < market.low: 
+            market.low = sell
+    
         if(timeLength - x == 0  or update):
             
             
             market.updatePrice(sell, date, minute)
-                
+            
             
             #running the run method
             run(market)
             #resetting unrealizedBalance
             unrealizedBalance = market.unrealizedBalance
+            #markets high/low is reset for each period so,
+            market.high = sell
+            market.low = sell
             x = 0
         x += 1
         line = data.readline()
@@ -295,9 +309,9 @@ def run(market):
     global j #for debugging
     j += 1 #for debugging with breakpoint
    
-    MACD = market.getIndicator("MACD")
-    if MACD.signalLine in market.indicatorValues:
-        pass
+    #MACD = market.getIndicator("MACD")
+    ##if MACD.signalLine in market.indicatorValues:
+    #    pass
 
 
 

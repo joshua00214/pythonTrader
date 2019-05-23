@@ -2,6 +2,7 @@ from indicators.SMA import SMA
 from indicators.EMA import EMA
 from indicators.RSI import RSI
 from indicators.MACD import MACD
+from indicators.SAR import SAR
 import plotly
 import plotly.graph_objs as go
 import random
@@ -13,7 +14,7 @@ import sys
 
 
 
-file = "EURUSDFEB.csv"
+file = "EURUSDMAY.csv"
 
 
 
@@ -44,7 +45,7 @@ def myThreads(listToAdd, i):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        indicators = {"MACD": [MACD,"EUR/USD"], "SMA": [SMA, "EUR/USD", 20]}
+        indicators = {"SAR": [SAR, "EUR/USD"]}
         
         data = []#d, e, p
         start(100000, 60, file,True, True, indicators, data)
