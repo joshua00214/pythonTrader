@@ -7,9 +7,7 @@ import plotly.graph_objs as go
 
 
 
-sar = []
-print(len(sar))
-
+print(max(2,3,4,5,1))
 
 '''
 scat = go.Scatter(x = x, y=y, mode = "lines+markers", name = "test")
