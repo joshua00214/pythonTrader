@@ -10,8 +10,8 @@ class SAR(Indicator):
         self.values = []
         self.PSAR = 0
         #uptrend is True/downtrend is false
-        self.trend = True
-        self.ptrend = True
+        self.trend = False
+        self.ptrend = False
         self.market = market
         #inital PSAR
         self.iPSAR = 0
