@@ -1,5 +1,7 @@
 from .Indicators import Indicator
 #note- length is proportinal to the time interval being used
+#standard to use 20 and 50 length
+#appear to be such a late indicator
 class SMA(Indicator):
     def __init__(self, market, currency, length):
         self.values = []

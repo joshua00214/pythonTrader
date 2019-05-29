@@ -1,5 +1,6 @@
 from .Indicators import Indicator
-
+#moddled after this video
+#https://www.youtube.com/watch?v=MuEpGBAH7pw
 class SAR(Indicator):
     def __init__(self, market, currency):
         super().__init__(market, currency)

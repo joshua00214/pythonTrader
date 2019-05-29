@@ -1,5 +1,7 @@
 from .Indicators import Indicator
-
+#Standard to use 14
+#when it is being overbought, itll go down
+#when it is being oversold, itll go up
 class RSI(Indicator):
     def __init__(self, market, currency, length):
         self.length = length

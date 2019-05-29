@@ -2,6 +2,8 @@ from .Indicators import Indicator
 from indicators.EMA import EMA
 #MACD always has the 26 EMA and the 12 EMA
 #NOTE  --- ALWAYS PLOT A SIGNAL LINE ITS A EMA WITH LENGTH 9
+#Buy signal when macd > signal line
+#appears to give a very long peek into the future
 class MACD(Indicator):
     def __init__(self, market, currency):
         
