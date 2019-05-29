@@ -1,6 +1,9 @@
 from .Indicators import Indicator
 #moddled after this video
 #https://www.youtube.com/watch?v=MuEpGBAH7pw
+#when its below - buy sign
+#whens its above - sell sign
+#dont trust a single dot, wait for a few
 class SAR(Indicator):
     def __init__(self, market, currency):
         super().__init__(market, currency)
