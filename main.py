@@ -96,7 +96,7 @@ class Market:
     def updatePrice(self, sellPrice, date, minute, currency = "EUR/USD"):
        
         self.sellPrices[currency] = sellPrice
-        self.buyPrices[currency] = sellPrice - self.spread
+        self.buyPrices[currency] = sellPrice + self.spread
         
         for indicator in list(self.indicators.values()):
             
