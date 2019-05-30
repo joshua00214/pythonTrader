@@ -14,6 +14,9 @@ from multiprocessing import Process, Manager
 import sys
 import math
 #will contain the ability to buy/sell, balance
+
+testing = True
+
 class Market:
     #sets balance, and all holdings
     #balance is always realized, so may be inaccurate when shorting
@@ -214,6 +217,7 @@ def openFile(market, timeLength, file):
             if market.holdings[currency] == 0:
                 unrealizedBalance = market.balance
         update = False
+        global testing
         if unrealizedBalance - market.balanceAtZeroHoldings < market.stopLoss and market.stopLoss != -1:
             if market.isPrint:
                 print("taking loss" + date + minute)
@@ -224,7 +228,9 @@ def openFile(market, timeLength, file):
                 market.sell("EUR/USD", market.holdings["EUR/USD"])
             elif market.holdings["EUR/USD"] < 0:
                 market.buy("EUR/USD", (-1) * market.holdings["EUR/USD"])
-            update = True
+            market.balanceAtZeroHoldings = market.unrealizedBalance
+            #the update can mess up indicators
+            #update = True
         if unrealizedBalance - market.balanceAtZeroHoldings > market.takeProfit and market.takeProfit != -1:
             if market.isPrint:
                 print("taking profit: " + date + minute)
@@ -235,7 +241,9 @@ def openFile(market, timeLength, file):
                 market.sell("EUR/USD", market.holdings["EUR/USD"])
             elif market.holdings["EUR/USD"] < 0:
                 market.buy("EUR/USD", (-1) * market.holdings["EUR/USD"])
-            update = True
+            market.balanceAtZeroHoldings = market.unrealizedBalance
+            #the update can mess up indicators
+            #update = True
         #calculating the high/lows of the period
         if sell > market.high:
             market.high = sell
@@ -305,14 +313,17 @@ def start(balance, timeLength, file,isPlot, isPrint, dictOfIndicators, data = []
 
 #runs each iteration
 j = 0 #for debuggins
+
 def run(market):
 
     global j #for debugging
+    global testing
     j += 1 #for debugging with breakpoint
    
-    #MACD = market.getIndicator("MACD")
-    ##if MACD.signalLine in market.indicatorValues:
-    #    pass
+    if market.date == "2019.02.12" and testing:
+        market.buy("EUR/USD", .1*market.unrealizedBalance)
+        market.takeProfit = .02 * 2000
+        testing = False
 
 
 
