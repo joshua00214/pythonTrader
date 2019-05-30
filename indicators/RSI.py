@@ -2,6 +2,16 @@ from .Indicators import Indicator
 #Standard to use 14
 #when it is being overbought, itll go down
 #when it is being oversold, itll go up
+'''
+a. BUY when the RSI is about to approach upwards into the overbought zone (at ~70); or
+
+b. BUY when the RSI rises upwards and leaves the oversold zone (at ~30); or
+
+c. SELL when the RSI declines downwards and leaves the overbought zone (at ~70); or
+
+d. SELL when the RSI is about to approach downwards into the oversold zone (at ~30)
+Avoid executing trades when RSI is between 45-55 or to be more conservative between 40-60.
+'''
 class RSI(Indicator):
     def __init__(self, market, currency, length):
         self.length = length
