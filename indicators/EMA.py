@@ -50,6 +50,7 @@ class EMA(Indicator):
         if len(self.averages) == self.length:
             return self.averages[0]
         
+        
 
     def getLength(self):
         return self.length

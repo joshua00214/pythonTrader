@@ -179,6 +179,11 @@ class Market:
         self.listBalace.append(self.balance)
         self.listUnrealizedBalance.append(self.unrealizedBalance)
         self.listBalanceAtZeroHoldings.append(self.balanceAtZeroHoldings)
+    def setTakeProfit(self, val):
+        self.takeProfit = val
+    def setStopLoss(self, val):
+        self.stopLoss = (-1) * val
+
 
 
 #will open to file and call the run method for every new price, and update the price in the market
@@ -313,17 +318,69 @@ def start(balance, timeLength, file,isPlot, isPrint, dictOfIndicators, data = []
 
 #runs each iteration
 j = 0 #for debuggins
-
+previousRSI = None
 def run(market):
 
     global j #for debugging
     global testing
+    global previousRSI
+
+
     j += 1 #for debugging with breakpoint
-   
-    if market.date == "2019.02.12" and testing:
-        market.buy("EUR/USD", .1*market.unrealizedBalance)
-        market.takeProfit = .02 * 2000
-        testing = False
+    if market.getIndicator("MACD").signalLine.getValue() is None:   #dont wanna run when signal line doesnt have values
+        print(market.date)
+        return
+    
+    
+        
+    
+    
+    MACDSignal = [False, False] #[Buy, Sell]
+    if market.getIndicator("MACD").getValue() > market.getIndicator("MACD").signalLine.getValue():
+        MACDSignal[0] = True
+    if market.getIndicator("MACD").getValue() < market.getIndicator("MACD").signalLine.getValue():
+        MACDSignal[1] = True
+
+    
+
+    
+    RSISignal = [False, False] #[Buy, Sell]
+
+    RSI = market.getIndicator("RSI").getValue()
+    if RSI is None or previousRSI is None:
+        previousRSI = RSI
+        return
+
+    if RSI > 70 and previousRSI < 70: #just passed the 70 zone
+        RSISignal[0] = True
+    if RSI > 30 and previousRSI < 30: #just got out of oversold
+        RSISignal[0] = True
+    if RSI < 70 and previousRSI > 70: #just left overbough zone
+        RSISignal[1] = True
+    if RSI < 30 and previousRSI > 30: #just went into overzone zone
+        RSISignal[1] = True
+    
+    if MACDSignal[0] and RSISignal[0]: #going long
+        print("FIRST BUY" + market.date + market.minute)
+        print(MACDSignal[0])
+        print(MACDSignal[1])
+        print(market.getIndicator("MACD").getValue())
+        print(market.getIndicator("MACD").signalLine.getValue())
+        market.buy("EUR/USD", .1 * market.unrealizedBalance)
+        market.setTakeProfit(.02 * 2000) #2000 should be un-hardcoded later on
+        market.setStopLoss(.01 * 2000)
+        exit()
+    if MACDSignal[1] and RSISignal[1]:
+        market.sell("EUR/USD", .1 * market.unrealizedBalance)
+        market.setTakeProfit(.02 * 2000)
+        market.setStopLoss(.01 * 2000)
+
+
+    
+    
+    
+    
+
 
 
 

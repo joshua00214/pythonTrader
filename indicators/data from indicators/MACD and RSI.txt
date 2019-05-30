@@ -1,0 +1,7 @@
+if MACD gives buy sign and RSI gives buy sign
+	buy with 2% takeProfit and 1% stopLoss
+
+if MACD gives sell sign and RSI gives sell sign
+	sell with 2% takeProfit and 1% stopLoss
+
+2%,1% refers to balance before the use of leverage

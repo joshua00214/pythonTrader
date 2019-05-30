@@ -7,7 +7,10 @@ import plotly.graph_objs as go
 
 
 
-print(max(2,3,4,5,1))
+test = False
+exit()
+if not test:
+    print("here")
 
 '''
 scat = go.Scatter(x = x, y=y, mode = "lines+markers", name = "test")

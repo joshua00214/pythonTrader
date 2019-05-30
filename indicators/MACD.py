@@ -30,5 +30,7 @@ class MACD(Indicator):
             self.market.indicatorValues["signalLine"] = [self.signalLine.getValue()]
 
     def getValue(self):
+        #i know i know dont yell at me
         if self.MACD != 0:
             return self.MACD
+        
