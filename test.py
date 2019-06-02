@@ -7,10 +7,8 @@ import plotly.graph_objs as go
 
 
 
-test = False
-exit()
-if not test:
-    print("here")
+a = [0,1,2]
+print(a[-1])
 
 '''
 scat = go.Scatter(x = x, y=y, mode = "lines+markers", name = "test")

@@ -16,12 +16,13 @@ class EMA(Indicator):
         self.averages = []
         self.length = length
         self.k = 2 / (length + 1)
-        
+        self.market = market
         super().__init__(market, currency)
         self.isPrint = True
     def update(self, value):
         #adding next value to list of values
-        
+        if self.length == 9:
+            print(self.market.date + self.market.minute + " in signalLine")
 
 
         self.values.insert(0, value)

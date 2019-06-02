@@ -18,16 +18,20 @@ class MACD(Indicator):
     def update(self, price):
         self.shortEMA.update(price)
         self.longEMA.update(price)
-        if self.longEMA.getValue() is None:
-            self.MACD = 0
-            return 
-        self.MACD = self.longEMA.getValue() - self.shortEMA.getValue()
-        self.signalLine.update(self.MACD)
-        #add this signal line
+        #this needs to come first to fill the market.indicatorValues["signalLine"] with a bunch of Nones up first to match with the date
         if "signalLine" in self.market.indicatorValues.keys():
             self.market.indicatorValues["signalLine"].append(self.signalLine.getValue())
         else:
             self.market.indicatorValues["signalLine"] = [self.signalLine.getValue()]
+        if self.longEMA.getValue() is None:
+            self.MACD = 0
+            return 
+        
+        #MACD IS SHORT - LONG
+        self.MACD =self.shortEMA.getValue() - self.longEMA.getValue() 
+        self.signalLine.update(self.MACD)
+        #add this signal line
+        
 
     def getValue(self):
         #i know i know dont yell at me

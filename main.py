@@ -16,7 +16,7 @@ import math
 #will contain the ability to buy/sell, balance
 
 testing = True
-
+j = 0 #for debuggins
 class Market:
     #sets balance, and all holdings
     #balance is always realized, so may be inaccurate when shorting
@@ -98,6 +98,7 @@ class Market:
     #updates buy/sell prices and the indicators and the unrealized profit.
     def updatePrice(self, sellPrice, date, minute, currency = "EUR/USD"):
        
+        
         self.sellPrices[currency] = sellPrice
         self.buyPrices[currency] = sellPrice + self.spread
         
@@ -155,6 +156,8 @@ class Market:
     #storing all data to plot at the end
     def plot(self):
         #storing currencies values
+        
+        
         for currency in self.sellPrices:
             if currency in self.listSellPrices.keys():
                 self.listSellPrices[currency].append(self.sellPrices[currency])
@@ -179,6 +182,8 @@ class Market:
         self.listBalace.append(self.balance)
         self.listUnrealizedBalance.append(self.unrealizedBalance)
         self.listBalanceAtZeroHoldings.append(self.balanceAtZeroHoldings)
+        
+            
     def setTakeProfit(self, val):
         self.takeProfit = val
     def setStopLoss(self, val):
@@ -283,7 +288,7 @@ def openFile(market, timeLength, file):
 #TODO loop through and create all indicators with an index instead, by using a dictionarry of lists
 '''
 {
-    smallSMA : [SMA, *args]
+    smallSMA : [SMA, *args] 
     name : [indicator to use (just send the class), variable length of args/]
 }
 '''
@@ -317,7 +322,7 @@ def start(balance, timeLength, file,isPlot, isPrint, dictOfIndicators, data = []
 
 
 #runs each iteration
-j = 0 #for debuggins
+
 previousRSI = None
 def run(market):
 
@@ -361,15 +366,11 @@ def run(market):
         RSISignal[1] = True
     
     if MACDSignal[0] and RSISignal[0]: #going long
-        print("FIRST BUY" + market.date + market.minute)
-        print(MACDSignal[0])
-        print(MACDSignal[1])
-        print(market.getIndicator("MACD").getValue())
-        print(market.getIndicator("MACD").signalLine.getValue())
+        
         market.buy("EUR/USD", .1 * market.unrealizedBalance)
         market.setTakeProfit(.02 * 2000) #2000 should be un-hardcoded later on
         market.setStopLoss(.01 * 2000)
-        exit()
+      
     if MACDSignal[1] and RSISignal[1]:
         market.sell("EUR/USD", .1 * market.unrealizedBalance)
         market.setTakeProfit(.02 * 2000)
