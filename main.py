@@ -368,8 +368,8 @@ def run(market):
     if MACDSignal[0] and RSISignal[0]: #going long
         
         market.buy("EUR/USD", .1 * market.unrealizedBalance)
-        market.setTakeProfit(.02 * 2000) #2000 should be un-hardcoded later on
-        market.setStopLoss(.01 * 2000)
+        market.setTakeProfit(10) #2000 should be un-hardcoded later on
+        market.setStopLoss(10)
       
     if MACDSignal[1] and RSISignal[1]:
         market.sell("EUR/USD", .1 * market.unrealizedBalance)
