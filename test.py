@@ -21,7 +21,11 @@ print("rs")
 print(rsi.RS)
 print("RSI:")
 print(rsi.getValue())
-
+rsi.update(43.0625) 
+print("AFTER NEXT UPDATE")
+print("rs")
+print(rsi.RS)
+print(rsi.getValue())
 '''
 scat = go.Scatter(x = x, y=y, mode = "lines+markers", name = "test")
 scat2 = go.Scatter(x = newX, y=newY, mode = "lines+markers", name = "regression")

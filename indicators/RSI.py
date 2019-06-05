@@ -1,5 +1,7 @@
 from .Indicators import Indicator
 #http://cns.bu.edu/~gsc/CN710/fincast/Technical%20_indicators/Relative%20Strength%20Index%20(RSI).htm
+#part of the calculation in this website must be down, they are not calculatoing avg
+#correct
 #Standard to use 14
 #when it is being overbought, itll go down
 #when it is being oversold, itll go up
@@ -40,23 +42,30 @@ class RSI(Indicator):
         totalGain = 0
         totalLoss = 0
         increases = []
+        losses = []
         for i in range(self.length + 1):
             #allows me to loop back -> front
             if i == self.length:
                 break
             if self.forexPrices[i] < self.forexPrices[i + 1]:
-                
+                losses.insert(0,self.forexPrices[i + 1] - self.forexPrices[i])
                 totalLoss += self.forexPrices[i + 1] - self.forexPrices[i]
             if self.forexPrices[i] > self.forexPrices[i + 1]:
                 increases.insert(0, self.forexPrices[i] - self.forexPrices[i+1])
                 totalGain += self.forexPrices[i] - self.forexPrices[i + 1]
         self.avgGain.insert(0, totalGain/self.length)
         self.avgLoss.insert(0, totalLoss/self.length)
-
+        currentGain = 0
+        currentLoss = 0
+        #index 0 is the most recent price, index 1 was previous price
+        if self.forexPrices[0] > self.forexPrices[1]:
+            currentGain += self.forexPrices[0] - self.forexPrices[1]
+        if self.forexPrices[1] > self.forexPrices[0]:
+            currentLoss += self.forexPrices[1] - self.forexPrices[0]
         if len(self.avgGain) <2 :
            self.RS = self.avgGain[0]/self.avgLoss[0]
         else:
-            self.RS = (((self.avgGain[1] * 13) + totalGain) / 14)  /   (((self.avgLoss[1] * 13) + totalLoss)/14)
+            self.RS = (((self.avgGain[1] * 13) + currentGain) / 14)  /   (((self.avgLoss[1] * 13) + currentLoss)/14)
         self.RSI = 100 - (100 / (1 + self.RS))
 #JUST FIGURED OUT I NEED CURRENT GAIN
 
