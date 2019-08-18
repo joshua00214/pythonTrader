@@ -156,7 +156,7 @@ class Market:
     #storing all data to plot at the end
     def plot(self):
         #storing currencies values
-        
+         
         
         for currency in self.sellPrices:
             if currency in self.listSellPrices.keys():
