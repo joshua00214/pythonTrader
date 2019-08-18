@@ -45,7 +45,7 @@ def myThreads(listToAdd, i):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        indicators = {"SAR": [SAR, "EUR/USD"], "MACD": [MACD, "EUR/USD"], "RSI" : [RSI, "EUR/USD", 14], "SMAL": [SMA, "EUR/USD", 20], "SMAS":[SMA, "EUR/USD", 50]}
+        indicators = {"SAR": [SAR, "EUR/USD"], "MACD": [MACD, "EUR/USD"], "RSI" : [RSI, "EUR/USD", 14]}
         
         data = []#d, e, p
         start(100000, 60, file,True, True, indicators, data)

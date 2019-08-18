@@ -21,9 +21,7 @@ class EMA(Indicator):
         self.isPrint = True
     def update(self, value):
         #adding next value to list of values
-        if self.length == 9:
-            print(self.market.date + self.market.minute + " in signalLine")
-
+        
 
         self.values.insert(0, value)
         #keeping its length to correct amount
