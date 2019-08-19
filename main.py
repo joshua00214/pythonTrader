@@ -331,50 +331,7 @@ def run(market):
     global previousRSI
 
 
-    j += 1 #for debugging with breakpoint
-    if market.getIndicator("MACD").signalLine.getValue() is None:   #dont wanna run when signal line doesnt have values
-        print(market.date)
-        return
     
-    
-        
-    
-    
-    MACDSignal = [False, False] #[Buy, Sell]
-    if market.getIndicator("MACD").getValue() > market.getIndicator("MACD").signalLine.getValue():
-        MACDSignal[0] = True
-    if market.getIndicator("MACD").getValue() < market.getIndicator("MACD").signalLine.getValue():
-        MACDSignal[1] = True
-
-    
-
-    
-    RSISignal = [False, False] #[Buy, Sell]
-
-    RSI = market.getIndicator("RSI").getValue()
-    if RSI is None or previousRSI is None:
-        previousRSI = RSI
-        return
-
-    if RSI > 70 and previousRSI < 70: #just passed the 70 zone
-        RSISignal[0] = True
-    if RSI > 30 and previousRSI < 30: #just got out of oversold
-        RSISignal[0] = True
-    if RSI < 70 and previousRSI > 70: #just left overbough zone
-        RSISignal[1] = True
-    if RSI < 30 and previousRSI > 30: #just went into overzone zone
-        RSISignal[1] = True
-    
-    if MACDSignal[0] and RSISignal[0]: #going long
-        
-        market.buy("EUR/USD", .1 * market.unrealizedBalance)
-        market.setTakeProfit(10) #2000 should be un-hardcoded later on
-        market.setStopLoss(10)
-      
-    if MACDSignal[1] and RSISignal[1]:
-        market.sell("EUR/USD", .1 * market.unrealizedBalance)
-        market.setTakeProfit(.02 * 2000)
-        market.setStopLoss(.01 * 2000)
 
 
     
